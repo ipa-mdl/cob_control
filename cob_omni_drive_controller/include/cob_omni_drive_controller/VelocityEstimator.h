@@ -22,7 +22,7 @@ public:
     VelocityEstimator(double overflow) : overflow_(overflow), overflow_twice_(overflow*2) {  reset(); }
     double estimateVelocity(double pos, double vel, double period) {
         if(overflow_ > 0 && period >  0 && !std::isnan(last_pos_)) vel = norm( pos - last_pos_) / period;
-        else if(overflow_ < 0 && period >  0 && !std::isnan(last_pos_)) vel = ( pos - last_pos_) / period;
+        else if(overflow_ <= 0 && period >  0 && !std::isnan(last_pos_)) vel = ( pos - last_pos_) / period;
         last_pos_ = pos;
         return vel;
     }
