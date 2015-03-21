@@ -8,18 +8,26 @@
 class VelocityEstimator {
     double overflow_;
     double overflow_twice_;
-    double last_pos_;
+    double last_pos_, last_val_;
     double norm(double val){
-        while(val >= overflow_){
+        /*********HACK***********/
+        if(std::abs(val)>overflow_) {
+            const double tmp = last_val_;
+            last_val_ = 0
+            return tmp;
+        }
+        
+        /*while(val >= overflow_){
             val -= overflow_twice_;
         }
         while(val < -overflow_){
             val += overflow_twice_;
-        }
-        return val;
+        }*/
+        
+        return last_val_ = val;
     }
 public:
-    VelocityEstimator(double overflow) : overflow_(overflow), overflow_twice_(overflow*2) {  reset(); }
+    VelocityEstimator(double overflow) : overflow_(overflow), overflow_twice_(overflow*2), last_pos_(0.), last_val_(0.) {  reset(); }
     double estimateVelocity(double pos, double vel, double period) {
         if(overflow_ > 0 && period >  0 && !std::isnan(last_pos_)) vel = norm( pos - last_pos_) / period;
         else if(overflow_ <= 0 && period >  0 && !std::isnan(last_pos_)) vel = ( pos - last_pos_) / period;
